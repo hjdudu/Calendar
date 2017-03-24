@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -14,7 +15,6 @@ import com.codbking.calendar.CalendarBean;
 import com.codbking.calendar.CalendarDateView;
 import com.codbking.calendar.CalendarUtil;
 import com.codbking.calendar.CalendarView;
-import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.list)
     ListView mList;
     private int[] data;
+    private LinearLayout item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +83,11 @@ public class MainActivity extends AppCompatActivity {
                 if (convertView == null) {
                     convertView = LayoutInflater.from(parentView.getContext()).inflate(R.layout.item, null);
                 }
-
+                item = (LinearLayout) findViewById(R.id.item);
                 TextView chinaText = (TextView) convertView.findViewById(R.id.chinaText);
                 TextView text = (TextView) convertView.findViewById(R.id.text);
 
                 text.setText("" + bean.day);
-                Logger.t("tag").d("" + bean);
                 if (bean.mothFlag != 0 || (data[0] >= bean.year && data[1] >= bean.moth && data[2] > bean.day)) {
                     text.setTextColor(0xff9299a1);
 //                    convertView.setBackgroundColor(0xfff);
@@ -103,19 +103,17 @@ public class MainActivity extends AppCompatActivity {
         mCalendarDateView.setOnItemClickListener(new CalendarView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, CalendarBean bean) {
-                Logger.t("tag").d(bean);
 //                mTitle.setText(bean.year + "/" + bean.moth + "/" + bean.day);
                 if (bean.mothFlag != 0 || (data[0] >= bean.year && data[1] >= bean.moth && data[2] > bean.day)) {
-                    view.setBackgroundColor(0xfff);
+                    view.setBackground(getResources().getDrawable(R.drawable.background_item1));
                     return;
                 } else {
+                    view.setBackground(getResources().getDrawable(R.drawable.background_item));
                     mTitle.setText(bean + "");
                 }
             }
         });
 
-
-        Logger.t("tag1").d(data + "");
         mTitle.setText(data[0] + "/" + data[1] + "/" + data[2]);
     }
 
