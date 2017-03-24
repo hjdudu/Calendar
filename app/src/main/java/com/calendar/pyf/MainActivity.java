@@ -14,6 +14,7 @@ import com.codbking.calendar.CalendarBean;
 import com.codbking.calendar.CalendarDateView;
 import com.codbking.calendar.CalendarUtil;
 import com.codbking.calendar.CalendarView;
+import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
@@ -28,14 +29,17 @@ public class MainActivity extends AppCompatActivity {
     CalendarDateView mCalendarDateView;
     @BindView(R.id.list)
     ListView mList;
+    private int[] data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        data = CalendarUtil.getYMD(new Date());
         initView();
         initList();
+
     }
 
     private void initList() {
@@ -83,8 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 TextView text = (TextView) convertView.findViewById(R.id.text);
 
                 text.setText("" + bean.day);
-                if (bean.mothFlag != 0) {
+                Logger.t("tag").d("" + bean);
+                if (bean.mothFlag != 0 || (data[0] >= bean.year && data[1] >= bean.moth && data[2] > bean.day)) {
                     text.setTextColor(0xff9299a1);
+//                    convertView.setBackgroundColor(0xfff);
                 } else {
                     text.setTextColor(0xff444444);
                 }
@@ -97,11 +103,19 @@ public class MainActivity extends AppCompatActivity {
         mCalendarDateView.setOnItemClickListener(new CalendarView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int postion, CalendarBean bean) {
-                mTitle.setText(bean.year + "/" + bean.moth + "/" + bean.day);
+                Logger.t("tag").d(bean);
+//                mTitle.setText(bean.year + "/" + bean.moth + "/" + bean.day);
+                if (bean.mothFlag != 0 || (data[0] >= bean.year && data[1] >= bean.moth && data[2] > bean.day)) {
+                    view.setBackgroundColor(0xfff);
+                    return;
+                } else {
+                    mTitle.setText(bean + "");
+                }
             }
         });
 
-        int[] data = CalendarUtil.getYMD(new Date());
+
+        Logger.t("tag1").d(data + "");
         mTitle.setText(data[0] + "/" + data[1] + "/" + data[2]);
     }
 
